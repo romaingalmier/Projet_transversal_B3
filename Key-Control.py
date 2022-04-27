@@ -59,7 +59,7 @@ def on_press(key):
         ser.write(order.encode())
         print('right_key')
     if key == keyboard.Key.up:
-        order = 'A+'
+        order = 'A'
         ser.write(order.encode())
         print('strait_key')
     if key == keyboard.Key.down:
