@@ -1,5 +1,17 @@
 import serial
+from autonome import *
+
 
 if __name__ == '__main__':
+    '''
 
-    pass
+        getCible{
+
+            while . . .
+        }
+
+
+    '''
+
+    Robot = Robot()
+    print(type(Robot))
