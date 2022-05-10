@@ -60,7 +60,6 @@ while True:
 			cv2.circle(image, (int(x), int(y)), int(rayon), (0, 0, 0), 2)
 			cv2.circle(image, centre, 5, (0, 0, 0), -1)
 		#Communication au robot
-	time.sleep(0.1)
 	Liste1Paul[0] = detection
 	Liste1Paul[1] = freq1
 	Liste1Paul[2] = freq2
