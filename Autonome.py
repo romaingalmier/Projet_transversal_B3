@@ -8,7 +8,7 @@ Paul : Liste1[bool(cible detecter ou non),freq1,freq2]
 import serial
 from time import sleep
 
-L = [True,False,False,True,True]
+L = [[True],False,False,True,True]
 
 
 class Robot:
@@ -34,12 +34,13 @@ class Robot:
         #Ordre Lumiere du canon ----------------- 
                 "allumer":'O',
                 "eteindre":'N',
-        #Ordre deplacement ----------------- 
+        #Ordre Viser ----------------- 
                 "viserHaut":'H',
                 "viserBas":'B',
                 "viserGauche":'E',
                 "viserDroite":'D',
-
+                "baliseDebut" :'V',
+                "baliseFin" :'W',
             }
 
         self.order = switcher.get(direction)
@@ -53,10 +54,11 @@ class Robot:
 
 class Deplacement(Robot):
     def __init__(self):
+        self.listeTom = []
         pass
         
     def traitementListe(self,listeTom):
-        return listeTom[0],listeTom[1],listeTom[2],listeTom[3],listeTom[4]
+        return listeTom[0][0],listeTom[1][0],listeTom[2][0],listeTom[3][0],listeTom[4][0]
 
     def choixDirection(self,listeTom):
         """
@@ -87,6 +89,18 @@ class Deplacement(Robot):
 
         self.choixOrdre(direction) 
 
+    def bloquerDeplacement(self):
+        self.choixOrdre('stop')
+        self.depacementPossible = False
+    
+    def activerDeplacement(self):
+        self.depacementPossible = True
+        #choixDirecton() ?
+
+    def getListeTom(self,liste):
+        self.listeTom = liste
+
+
 
 class Viser(Robot):
     """
@@ -96,11 +110,19 @@ class Viser(Robot):
 
     """
     def __init__(self):
-        pass
+        self.listePaul1 = []
+        self.listePaul2 = []
+        
+    def getlistePaul1(self,liste):
+        self.listePaul1 = liste
 
-    def bloquerDeplacement(self):
-        self.choixOrdre('stop')
-        self.depacementPossible = False
+    def getlistePaul2(self,liste):
+        self.listePaul1 = liste
+
+    def detectionCible(self,listePaul1):
+        if listePaul1[0] :
+            self.sequenceDeTir()
+        return listePaul1[0]
 
 
     def viser(self):
@@ -109,20 +131,22 @@ class Viser(Robot):
 
         Pour l'envoie de l'ordre:  balisedeb = V /freq1/freq2 / balisfin = W
         '''
-        pass 
+        self.choixOrdre('baliseDebut')
+
+        #self.ordre = 
+
+
+        self.choixOrdre('baliseFin')
     
     def verificationCiblage(self,listePaul2):
         #get ListPaul2 ?
         return listePaul2[0][0] and listePaul2[1][1]
         
-    
-    
     def ajusterViser(self,listePaul2):
         # CibleToucher?
         pass
 
     def tirer(self):
-        self.viser()
         self.choixOrdre('allumer')
         sleep(3) #attente des sevomoteurs + check visuel
         cibleAtteinte = self.verificationCiblage()
@@ -130,10 +154,16 @@ class Viser(Robot):
         if cibleAtteinte:
             self.depacementPossible = True
             self.choixOrdre('eteindre')
+            
         else:
             self.ajusterViser()
 
+    def sequenceDeTir(self):
+        
+        self.viser()
+        self.tirer()
 
+    
         
         
 
