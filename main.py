@@ -22,17 +22,12 @@ if __name__ == '__main__':
         #TODO Recuperer listes et les metttres en parametres 
         Deplacement.getListeTom()
         Viser.getListePaul1()
-    #-------------------------------------
+        #-------------------------------------
 
         if Viser.detectionCible():
-
             Deplacement.bloquerDeplacement()
-
             Viser.sequenceDeTir()
-
-
-            
-
             Deplacement.activerDeplacement()
-
+        
+        Deplacement.choixDirection()
 

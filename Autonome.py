@@ -13,7 +13,7 @@ L = [[True],False,False,True,True]
 
 class Robot:
     def __init__(self):
-        self.ordre = "S"
+        self.order = "S"
         self.ser = serial.Serial("/dev/ttyUSB0", baudrate = 19200)
 
         self.depacementPossible = True # Bool pour activer ou desactiver le deplacement
@@ -39,6 +39,7 @@ class Robot:
                 "viserBas":'B',
                 "viserGauche":'E',
                 "viserDroite":'D',
+
                 "baliseDebut" :'V',
                 "baliseFin" :'W',
             }
@@ -52,42 +53,48 @@ class Robot:
         """
         self.ser.write(self.order.encode())
 
+    def executerOrdre(self,ordre):
+        """
+        la partie serial pour communiquer
+        """
+        self.ser.write(ordre.encode())
+
 class Deplacement(Robot):
     def __init__(self):
         self.listeTom = []
         pass
         
-    def traitementListe(self,listeTom):
-        return listeTom[0][0],listeTom[1][0],listeTom[2][0],listeTom[3][0],listeTom[4][0]
+    def traitementListe(self):
+        return self.listeTom[0][0],self.listeTom[1][0],self.listeTom[2][0],self.listeTom[3][0],self.listeTom[4][0]
 
-    def choixDirection(self,listeTom):
+    def choixDirection(self):
         """
         en fonction de la liste arbre de décision
 
         @return direction : zone choisit 
         """
         #TODO 4 tourner a gauche/droite
-        gauche, diagGauche, toutDroit, diagDroite, droite = self.traitementListe(listeTom)
+        gauche, diagGauche, toutDroit, diagDroite, droite = self.traitementListe()
+        if self.depacementPossible : 
+            if toutDroit:
+                direction = "toutDroit"
+            
+            elif gauche:
+                direction = "gauche"
 
-        if toutDroit:
-            direction = "toutDroit"
-        
-        elif gauche:
-            direction = "gauche"
+            elif droite:
+                direction = "droite"
 
-        elif droite:
-            direction = "droite"
+            elif diagGauche:
+                direction = "diagGauche"
 
-        elif diagGauche:
-            direction = "diagGauche"
+            elif diagDroite:
+                direction = "diagDroite"
 
-        elif diagDroite:
-            direction = "diagDroite"
+            else :
+                direction = "reculer"
 
-        else :
-            direction = "reculer"
-
-        self.choixOrdre(direction) 
+            self.choixOrdre(direction) 
 
     def bloquerDeplacement(self):
         self.choixOrdre('stop')
@@ -95,6 +102,7 @@ class Deplacement(Robot):
     
     def activerDeplacement(self):
         self.depacementPossible = True
+        self.choixDirection()
         #choixDirecton() ?
 
     def getListeTom(self,liste):
@@ -119,10 +127,10 @@ class Viser(Robot):
     def getlistePaul2(self,liste):
         self.listePaul1 = liste
 
-    def detectionCible(self,listePaul1):
-        if listePaul1[0] :
+    def detectionCible(self):
+        if self.listePaul1[0] :
             self.sequenceDeTir()
-        return listePaul1[0]
+        return self.listePaul1[0]
 
 
     def viser(self):
@@ -134,17 +142,9 @@ class Viser(Robot):
         self.choixOrdre('baliseDebut')
 
         #self.ordre = 
-
+        #self.executerOrdre()
 
         self.choixOrdre('baliseFin')
-    
-    def verificationCiblage(self,listePaul2):
-        #get ListPaul2 ?
-        return listePaul2[0][0] and listePaul2[1][1]
-        
-    def ajusterViser(self,listePaul2):
-        # CibleToucher?
-        pass
 
     def tirer(self):
         self.choixOrdre('allumer')
@@ -152,17 +152,21 @@ class Viser(Robot):
         cibleAtteinte = self.verificationCiblage()
 
         if cibleAtteinte:
-            self.depacementPossible = True
             self.choixOrdre('eteindre')
-            
         else:
             self.ajusterViser()
 
-    def sequenceDeTir(self):
-        
+    def sequenceDeTir(self):   
         self.viser()
         self.tirer()
 
+    def verificationCiblage(self):
+        #get ListPaul2 ?
+        return self.listePaul2[0][0] and self.listePaul2[1][1]
+        
+    def ajusterViser(self):
+        # CibleToucher?
+        pass
     
         
         
