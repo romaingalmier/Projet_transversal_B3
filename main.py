@@ -3,18 +3,7 @@ import Autonome as Au
 
 
 if __name__ == '__main__':
-    '''
-
-        getCible{
-
-            while . . .
-        }
-
-
-    '''
-
-    Robot = Au.Robot()
-    print(type(Robot))
+    
     Viser = Au.Viser()
     Deplacement = Au.Deplacement()
 
