@@ -12,7 +12,13 @@ if __name__ == '__main__':
 
     while True :
         #TODO Recuperer listes et les metttres en parametres 
-        Deplacement.getlisteTom(lidar.donnee())
+
+        try : 
+            listeTom = lidar.donnee()
+        except : 
+            listeTom = lidar.donnee()
+            
+        Deplacement.getlisteTom(listeTom)
         Viser.getlistePaul1(cible.lancer_detection(1))
         #-------------------------------------
 
