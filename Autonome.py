@@ -14,10 +14,9 @@ L = [[True],False,False,True,True]
 class Robot:
     def __init__(self):
         self.order = "S"
-        self.ser = serial.Serial("/dev/ttyUSB0", baudrate = 19200)
+        # self.ser = serial.Serial("/dev/ttyUSB0", baudrate = 19200)
 
-        self.depacementPossible = True # Bool pour activer ou desactiver le deplacement
-
+        
     def choixOrdre(self,direction):
         """
         adaptation direction en ordre
@@ -47,25 +46,33 @@ class Robot:
         self.order = switcher.get(direction)
         self.executerOrdre()
 
-    def executerOrdre(self):
-        """
-        la partie serial pour communiquer
-        """
-        self.ser.write(self.order.encode())
+    # def executerOrdre(self):
+    #     """
+    #     la partie serial pour communiquer
+    #     """
+    #     print(self.order)
+    #     # self.ser.write(self.order.encode())
 
-    def executerOrdre(self,ordre):
+    def executerOrdre(self,ordre = -1):
         """
         la partie serial pour communiquer
         """
-        self.ser.write(ordre.encode())
+        if ordre == -1 :
+            # self.ser.write(self.order.encode())
+            print(self.order)
+        else :
+            print(ordre)
+            # self.ser.write(ordre.encode())
 
 class Deplacement(Robot):
     def __init__(self):
         self.listeTom = []
-        pass
+        self.depacementPossible = True # Bool pour activer ou desactiver le deplacement
+
         
     def traitementListe(self):
-        return self.listeTom[0][0],self.listeTom[1][0],self.listeTom[2][0],self.listeTom[3][0],self.listeTom[4][0]
+        #return self.listeTom[0][0],self.listeTom[1][0],self.listeTom[2][0],self.listeTom[3][0],self.listeTom[4][0]
+        return self.listeTom[0],self.listeTom[1],self.listeTom[2],self.listeTom[3],self.listeTom[4]
 
     def choixDirection(self):
         """
@@ -105,7 +112,7 @@ class Deplacement(Robot):
         self.choixDirection()
         #choixDirecton() ?
 
-    def getListeTom(self,liste):
+    def getlisteTom(self,liste):
         self.listeTom = liste
 
 
@@ -134,27 +141,24 @@ class Viser(Robot):
 
 
     def viser(self):
-        '''
-        recuperer les coords ?
-
-        Pour l'envoie de l'ordre:  balisedeb = V /freq1/freq2 / balisfin = W
-        '''
         self.choixOrdre('baliseDebut')
-
-        #self.ordre = 
-        #self.executerOrdre()
+        
+        freqX = conversionIntlisteStr(self.listePaul1[1])
+        freqY = conversionIntlisteStr(self.listePaul1[2])
+        freq = freqX+freqY
+        for i in range(len(freq)):
+            self.executerOrdre(int(freq[i]))
 
         self.choixOrdre('baliseFin')
-
     def tirer(self):
         self.choixOrdre('allumer')
-        sleep(3) #attente des sevomoteurs + check visuel
-        cibleAtteinte = self.verificationCiblage()
-
-        if cibleAtteinte:
-            self.choixOrdre('eteindre')
-        else:
-            self.ajusterViser()
+        sleep(0.3) #attente des sevomoteurs + check visuel
+        # cibleAtteinte = self.verificationCiblage()
+        self.choixOrdre('eteindre')
+        # if cibleAtteinte:
+        #     self.choixOrdre('eteindre')
+        # else:
+        #     self.ajusterViser()
 
     def sequenceDeTir(self):   
         self.viser()
@@ -170,6 +174,9 @@ class Viser(Robot):
     
         
         
-
-
+def conversionIntlisteStr(n):
+    L=list(str(n))
+    for i in range(len(L)):
+        L[i]=int(L[i])
+    return L
     
