@@ -26,8 +26,8 @@ class Robot:
                 "toutDroit":'A',
                 "gauche":'G',
                 "droite":'D',
-                # "diagGauche":'',
-                # "diagDroite":'',
+                "diagGauche":'G',
+                "diagDroite":'D',
                 "reculer":'R',
                 "stop":'S',
         #Ordre Lumiere du canon ----------------- 
@@ -135,8 +135,6 @@ class Viser(Robot):
         self.listePaul1 = liste
 
     def detectionCible(self):
-        if self.listePaul1[0] :
-            self.sequenceDeTir()
         return self.listePaul1[0]
 
 
@@ -150,6 +148,7 @@ class Viser(Robot):
             self.executerOrdre(int(freq[i]))
 
         self.choixOrdre('baliseFin')
+        
     def tirer(self):
         self.choixOrdre('allumer')
         sleep(0.3) #attente des sevomoteurs + check visuel

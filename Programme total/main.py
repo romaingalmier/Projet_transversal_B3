@@ -1,5 +1,7 @@
 import serial
 import Autonome as Au
+import cible 
+import lidar
 
 listePaul1 = [False, 404,50]
 listeTom =  [False,False,False,True,False]
@@ -10,8 +12,8 @@ if __name__ == '__main__':
 
     while True :
         #TODO Recuperer listes et les metttres en parametres 
-        Deplacement.getlisteTom(listeTom)
-        Viser.getlistePaul1(listePaul1)
+        Deplacement.getlisteTom(lidar.donnee())
+        Viser.getlistePaul1(cible.lancer_detection(1))
         #-------------------------------------
 
         if Viser.detectionCible():
@@ -19,7 +21,7 @@ if __name__ == '__main__':
             Deplacement.bloquerDeplacement()
             Viser.sequenceDeTir()
             Deplacement.activerDeplacement()
-        
-        Deplacement.choixDirection()
+        else : 
+            Deplacement.choixDirection()
         
 
